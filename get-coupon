@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+[[ -n $DEBUG ]] && set -x
+
+# curl --silent -X POST https://gewinnen.sbb.ch/api/get-participant -H "Accept: application/json" -d '{"participantHash":null,"fingerprint":"","locale":""}' | jq '.participant.hash'
+# curl --silent -X POST https://gewinnen.sbb.ch/api/play-game -H "Accept: application/json" -H 'auth-key: _E6FDo5kyereg7j1nhg2fKsNWjhu373f' -d '{"stationId":10143,"participantHash":"_E6FDo5kyereg7j1nhg2fKsNWjhu373f"}' | jq
+
+main() { 
+  base_url="https://gewinnen.sbb.ch/"
+  participant_uri="api/get-participant"
+  play_uri="api/play-game"
+  header_accept="Accept: application/json"
+  fg_color='\033[0;36m'
+  no_color='\033[0m'
+
+  for i in $(eval echo "{1..$1}")
+  do
+    hash_orig=$(curl --silent -X POST "$base_url$participant_uri" -H "$header_accept" -d '{"participantHash":null,"fingerprint":"","locale":""}' | jq '.participant.hash')
+    hash=${hash_orig:1:32}
+    # echo "Participant hash is $hash"
+    result=$(curl --silent -X POST "$base_url$play_uri" -H "$header_accept" -H "auth-key: $hash" -d "{\"stationId\":$2,\"participantHash\":\"$hash\"}" | jq '. | .result + " - " + .productImage  + " - CouponCode: https://gewinnen.sbb.ch/coupon/"+ .couponCode')
+    if echo "$result" | grep --silent won; then
+      # echo -e "${fg_color}$result${no_color}"
+      echo -e "$result"
+    fi
+    sleep 5
+  done
+}
+
+main "$@"
