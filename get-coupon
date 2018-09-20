@@ -3,7 +3,7 @@
 [[ -n $DEBUG ]] && set -x
 
 # curl --silent -X POST https://gewinnen.sbb.ch/api/get-participant -H "Accept: application/json" -d '{"participantHash":null,"fingerprint":"","locale":""}' | jq '.participant.hash'
-# curl --silent -X POST https://gewinnen.sbb.ch/api/play-game -H "Accept: application/json" -H 'auth-key: _E6FDo5kyereg7j1nhg2fKsNWjhu373f' -d '{"stationId":10143,"participantHash":"_E6FDo5kyereg7j1nhg2fKsNWjhu373f"}' | jq
+# curl --silent -X POST https://gewinnen.sbb.ch/api/play-game -H "Accept: application/json" -H 'auth-key: xxx' -d '{"stationId":10143,"participantHash":"_E6FDo5kyereg7j1nhg2fKsNWjhu373f"}' | jq
 
 main() { 
   base_url="https://gewinnen.sbb.ch/"
